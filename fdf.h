@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 12:00:52 by qdegraev          #+#    #+#             */
-/*   Updated: 2015/12/30 18:16:27 by qdegraev         ###   ########.fr       */
+/*   Updated: 2015/12/30 20:20:35 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,15 @@ int		count_nbr(char **split);
 int		*str_to_tab(char *line);
 int		count_size_tab(char *av);
 int		**read_and_stock(char *agv);
+
+typedef struct	s_env
+{
+	int		**map;
+	void	*mlx;
+	void	*window;
+	int		x;
+	int		y;
+	int		color;
+}				t_env;
 
 #endif

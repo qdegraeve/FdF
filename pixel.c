@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/29 14:56:37 by qdegraev          #+#    #+#             */
-/*   Updated: 2015/12/30 18:45:00 by qdegraev         ###   ########.fr       */
+/*   Updated: 2015/12/30 21:00:35 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ int		draw_pixel(void *mlx, void *window, int x, int y, int color)
 
 	i = 0;
 	j = 0;
-	while (i < 20)
+	while (i < 10)
 	{
 		j = 0;
-		while (j < 20)
+		while (j < 10)
 		{
 			mlx_pixel_put(mlx, window, x + j, i + y, color);
 			j++;
@@ -34,28 +34,58 @@ int		draw_pixel(void *mlx, void *window, int x, int y, int color)
 	return (0);
 }
 
-int		main(int argc, char **av)
+int		draw(void *mlx, void *window, int **map)
 {
-	void *mlx;
-	void *window;
 	int x;
 	int y;
-	int **map;
 
-	mlx = mlx_init();
-	window = mlx_new_window(mlx, 400, 400, "prout");
-	map = read_and_stock(av[1]);
 	x = 0;
 	while (map[x] != NULL)
 	{
 		y = 0;
 		while (map[x][y] != -1)
 		{
-			draw_pixel(mlx, window, y * 20, x * 20, map[x][y] * 100);
+			draw_pixel(mlx, window, y * 20, x * 20, map[x][y] * 1000000);
 			y++;
 		}
 		x++;
 	}
-	mlx_loop(mlx);
+	return (0);
+}
+
+int		expose_hook(t_env *e)
+{
+	draw(e->mlx, e->window, e->map);
+	return (0);
+}
+
+int		key_hook(int keycode, t_env *e)
+{
+	ft_putnbr(keycode);
+	ft_putendl(" = keycode");
+	if (keycode == 123)
+	{
+		e->window = mlx_new_window(e->mlx, 600, 600, "caca");
+		mlx_key_hook(e->window, key_hook, e);
+		mlx_expose_hook(e->window, expose_hook, e);
+	}
+	if (keycode == 53)
+		exit(0);
+	return (0);
+}
+
+int		main(int argc, char **av)
+{
+	t_env	e;
+	int		x;
+	int		y;
+	int		**map;
+
+	e.mlx = mlx_init();
+	e.window = mlx_new_window(e.mlx, 1500, 1500, "prout");
+	e.map = read_and_stock(av[1]);
+	mlx_key_hook(e.window, key_hook, &e);
+	mlx_expose_hook(e.window, expose_hook, &e);
+	mlx_loop(e.mlx);
 	return(0);
 }
