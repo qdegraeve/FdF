@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 12:00:52 by qdegraev          #+#    #+#             */
-/*   Updated: 2015/12/30 20:20:35 by qdegraev         ###   ########.fr       */
+/*   Updated: 2015/12/31 16:24:42 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "libft/includes/get_next_line.h"
 # include "libft/includes/libft.h"
+
+#include <math.h>
 
 int		count_nbr(char **split);
 int		*str_to_tab(char *line);
@@ -26,8 +28,7 @@ typedef struct	s_env
 	int		**map;
 	void	*mlx;
 	void	*window;
-	int		x;
-	int		y;
+	int		i;
 	int		color;
 }				t_env;
 
