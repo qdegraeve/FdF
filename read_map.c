@@ -6,23 +6,25 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 11:58:01 by qdegraev          #+#    #+#             */
-/*   Updated: 2015/12/30 18:18:36 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/04 19:13:40 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int		count_nbr(char **split)
+int		count_nbr(char **split, t_env *e)
 {
 	int i;
 
 	i = 0;
 	while (split[i])
 		i++;
+	if (!e->withd || i < e->withd)
+		e->withd = i;
 	return (i);
 }
 
-int		*str_to_tab(char *line)
+int		*str_to_tab(char *line, t_env *e)
 {
 	int		i;
 	char	**tmp;
@@ -30,14 +32,13 @@ int		*str_to_tab(char *line)
 
 	i = 0;
 	tmp = ft_strsplit(line, ' ');
-	tab = (int*)malloc((count_nbr(tmp) + 1) * sizeof(tab));
+	tab = (int*)malloc(count_nbr(tmp, e) * sizeof(tab));
 	while (tmp[i])
 	{
 		tab[i] = ft_getnbr(tmp[i]);
 		free(tmp[i]);
 		i++;
 	}
-	tab[i] = -1;
 	return (tab);
 }
 
@@ -58,7 +59,7 @@ int		count_size_tab(char *av)
 	return (count);
 }
 
-int		**read_and_stock(char *agv)
+int		**read_and_stock(char *agv, t_env *e)
 {
 	int		fd;
 	int		i;
@@ -70,10 +71,11 @@ int		**read_and_stock(char *agv)
 	fd = open(agv, O_RDONLY);
 	while (get_next_line(fd, &line))
 	{
-		tab[i++] = str_to_tab(line);
+		tab[i++] = str_to_tab(line, e);
 		free(line);
 	}
 	tab[i] = NULL;
+	e->hei = i;
 	return (tab);
 }
 
