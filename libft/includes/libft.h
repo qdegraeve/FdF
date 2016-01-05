@@ -6,7 +6,7 @@
 /*   By: afillion <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/29 14:04:50 by afillion          #+#    #+#             */
-/*   Updated: 2015/12/30 11:55:27 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/05 18:43:20 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int		ft_atoi(const char *str);
 char	*ft_itoa(int n);
 void	ft_putbase(unsigned int n, unsigned int base);
 int		ft_getnbr(char *str);
+int		ft_abs(int i);
 
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);

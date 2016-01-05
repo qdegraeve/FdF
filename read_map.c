@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 11:58:01 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/04 19:13:40 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/05 19:51:52 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int		count_nbr(char **split, t_env *e)
 	i = 0;
 	while (split[i])
 		i++;
-	if (!e->withd || i < e->withd)
+	if (!e->withd || e->withd < i)
 		e->withd = i;
 	return (i);
 }

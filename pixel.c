@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/29 14:56:37 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/04 19:13:37 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/05 19:51:50 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	put_pixel_img(t_env *e, int x, int y, int color)
 	e->img.img[pos] = color % 256;
 	e->img.img[pos + 1] = (color >> 8) % 256;
 	e->img.img[pos + 2] = (color >> 16) % 256;
-	//img->img[pos + 3] = (color >> 24) % 256;
+	e->img.img[pos + 3] = (color >> 24) % 256;
 }
 
 void	mlx_fill_image(t_env *e)
@@ -36,25 +36,42 @@ void	mlx_fill_image(t_env *e)
 	int y;
 
 	y = -1;
-	while (++y < e->hei * e->scale)
+	while (++y < MAX_WITH)
 	{
 		x = -1;
-		while (++x < e->withd * e->scale)
+		while (++x < MAX_HEIG)
 		{
 			put_pixel_img(e, x, y, 0x000000);
 		}
 	}
 }
 
-int		draw_line(t_env *e, int x, int y)
+int		draw_line(t_env *e, t_coord *c)
 {
-	int j;
+	double deltax;
+	double deltay;
+	double error;
+	double deltaerror;
+	int y;
+	int x;
 
-	j = 1;
-	while (j < e->scale)
+	deltax = (c->x2 - c->x1);
+	deltay = (c->y2 - c->y1);
+	error = 0;
+	deltaerror = ft_abs(deltay / deltax);
+	y = c->y1;
+	x = c->x1;
+	while (x < c->x2)
 	{
-		put_pixel_img(e, x + j, y, e->color);
-		j++;
+		put_pixel_img(e, x, y, e->color);
+		error = error + deltaerror;
+		while (error >= 0.5)
+		{
+			put_pixel_img(e, x, y, e->color);
+			y = y + (c->y2 - c->y1 < 0 ? - 1 : 1);
+			error = error - 1.0;
+		}
+		x++;
 	}
 	return (0);
 }
@@ -72,10 +89,20 @@ int		draw_col(t_env *e, int x, int y)
 	return (0);
 }
 
+void	init_coord(t_coord *c, t_env *e,  int x, int y)
+{
+	e->color = (e->map[y][x] == 10) ? 0xFFFFFF : 0x00000000;
+	c->x1 = e->scale * (x + e->map[y][x]);
+	c->y1 = e->scale * (y + e->map[y][x]);
+	c->x2 = e->scale * ((x + 1) + e->map[y][x + 1]);
+	c->y2 = e->scale * (y + e->map[y][x + 1]);
+}
+
 int		draw(t_env *e)
 {
 	int x;
 	int y;
+	t_coord c;
 
 	x = 0;
 	y = 0;
@@ -84,17 +111,16 @@ int		draw(t_env *e)
 		x = 0;
 		while (x < e->withd)
 		{
-			e->color = (e->map[y][x] == 10) ? 0xFFFFFF : 0x00FF00;
-			put_pixel_img(e, (x * e->scale), (y * e->scale), e->color);
+			init_coord(&c, e, x, y);
 			if (x + 1 < e->withd)
 			{
 				e->color = (e->map[y][x] == e->map[y][x + 1]) ? 0xFF0000 : 0x0000FF;
-				draw_line(e, (x * e->scale), (y * e->scale));
+				draw_line(e, &c);
 			}
 			if (y + 1 < e->hei)
 			{
 				e->color = (e->map[y][x] == e->map[y + 1][x]) ? 0xFF0000 : 0x0000FF;
-				draw_col(e, (x * e->scale), (y * e->scale));
+//				draw_line(e, &c, c.x1, c.y2);
 			}
 			x++;
 		}
@@ -126,7 +152,7 @@ int		key_hook(int keycode, t_env *e)
 	{
 		mlx_clear_window(e->mlx, e->window);
 		mlx_fill_image(e);
-		e->scale /= 2;
+		e->scale = e->scale >= 2 ? e->scale / 2 : e->scale;
 		draw(e);
 		mlx_put_image_to_window(e->mlx, e->window, e->img.img_ptr, e->xpos, e->ypos);
 	}
@@ -154,16 +180,14 @@ void	init_env(t_env *e, char *file)
 	e->xpos = 0;
 	e->ypos = 0;
 	e->mlx = mlx_init();
-	e->window = mlx_new_window(e->mlx, 1600, 1600, "prout");
-	e->img.img_ptr = mlx_new_image(e->mlx, 600 , 600);
+	e->window = mlx_new_window(e->mlx, MAX_WITH, MAX_HEIG, "prout");
+	e->img.img_ptr = mlx_new_image(e->mlx, MAX_WITH , MAX_HEIG);
 	e->img.img = mlx_get_data_addr(e->img.img_ptr, &e->img.bpp, &e->img.size_line, &e->img.endian);
 }
 
 int		main(int argc, char **av)
 {
 	t_env	e;
-	int		x;
-	int		y;
 	int		**map;
 
 	init_env(&e, av[1]);

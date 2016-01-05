@@ -6,12 +6,15 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 12:00:52 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/04 19:13:39 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/05 19:51:54 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
+
+# define MAX_WITH 1400
+# define MAX_HEIG 1400
 
 # include "libft/includes/get_next_line.h"
 # include "libft/includes/libft.h"
@@ -40,6 +43,14 @@ typedef struct	s_env
 	int		color;
 	t_img	img;
 }				t_env;
+
+typedef struct	s_coord
+{
+	int		x1;
+	int		y1;
+	int		x2;
+	int		y2;
+}				t_coord;
 
 int		count_nbr(char **split, t_env *e);
 int		*str_to_tab(char *line, t_env *e);
