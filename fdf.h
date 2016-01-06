@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 12:00:52 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/05 19:51:54 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/06 21:53:15 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,17 @@ typedef struct	s_coord
 	int		y1;
 	int		x2;
 	int		y2;
+	int		dx;
+	int		dy;
+	int		octant;
+	double	slope;
 }				t_coord;
+
+typedef struct	s_octant
+{
+	int		x;
+	int		y;
+}				t_octant;
 
 int		count_nbr(char **split, t_env *e);
 int		*str_to_tab(char *line, t_env *e);

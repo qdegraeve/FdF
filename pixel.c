@@ -6,18 +6,13 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/29 14:56:37 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/05 19:51:50 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/06 21:53:12 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mlx.h>
 #include <unistd.h>
 #include "fdf.h"
-
-/*int		distance()
-{
-	int 
-}*/
 
 void	put_pixel_img(t_env *e, int x, int y, int color)
 {
@@ -40,62 +35,134 @@ void	mlx_fill_image(t_env *e)
 	{
 		x = -1;
 		while (++x < MAX_HEIG)
-		{
 			put_pixel_img(e, x, y, 0x000000);
-		}
 	}
 }
 
-int		draw_line(t_env *e, t_coord *c)
+void	draw_col(t_env *e, t_coord *c)
 {
-	double deltax;
-	double deltay;
-	double error;
-	double deltaerror;
+	int x;
+	int y;
+
+	x = c->x1;
+	y = c->y1;
+	while (y++ < c->y2)
+		put_pixel_img(e, x, y, e->color);
+}
+
+void	define_octant(t_coord *c)
+{
+	c->dy = c->y2 - c->y1;
+	c->dx = c->x2 - c->x1;
+	if (c->dx == 0)
+	{
+		c->octant = 8;
+		return ;
+	}
+	c->slope = c->dy / c->dx;
+	ft_putnbr(c->slope);
+	ft_putendl(" = c->slope");
+	if (c->slope >= 0 && c->slope <= 1 && c->dx > 0)
+		c->octant = 0;
+	else if (c->slope > 1 && c->dy > 0)
+		c->octant = 1;
+	else if (c->slope < -1 && c->dy > 0)
+		c->octant = 2;
+	else if (c->slope <= 0 && c->slope >= -1 && c->dx > 0)
+		c->octant = 3;
+	else if (c->slope > 0 && c->slope <= 1 && c->dx < 0)
+		c->octant = 4;
+	else if (c->slope > 1 && c->dy < 0)
+		c->octant = 5;
+	else if (c->slope < -1 && c->dy < 0)
+		c->octant = 6;
+	else if (c->slope < 0 && c->slope >= -1 && c->dx < 0)
+		c->octant = 7;
+}
+
+void	ft_magic(int octant, int x, int y, int out, t_octant *i)
+{
+	i->x = x;
+	i->y = y;
+	if (out)
+	{
+		octant = (octant == 6) ? 2 : octant;
+		octant = (octant == 2) ? 6 : octant;
+	}
+	if (octant == 3 || octant == 4)
+		i->x = -x;
+	if (octant == 7 || octant == 4)
+		i->y = -y;
+	if (octant == 1 || octant == 2 || octant == 5 || octant == 6)
+	{
+		i->x = (octant < 3) ? y : -y;
+		i->y = (octant > 1 && octant < 6) ? -x : x;
+	}
+}
+
+int		draw_line_x(t_env *e, t_coord *c, t_octant *i)
+{
+	double D;
 	int y;
 	int x;
+	int dx;
+	int dy;
 
-	deltax = (c->x2 - c->x1);
-	deltay = (c->y2 - c->y1);
-	error = 0;
-	deltaerror = ft_abs(deltay / deltax);
-	y = c->y1;
-	x = c->x1;
-	while (x < c->x2)
+	dx = i->x;
+	dy = i->y;
+	D = 2*dy - dx;
+	y = 0;
+	x = 0;
+	put_pixel_img(e, c->x1, c->y1, e->color);
+	while (x < dx)
 	{
-		put_pixel_img(e, x, y, e->color);
-		error = error + deltaerror;
-		while (error >= 0.5)
+		D = D + (2 * dy);
+		if (D > 0)
 		{
-			put_pixel_img(e, x, y, e->color);
-			y = y + (c->y2 - c->y1 < 0 ? - 1 : 1);
-			error = error - 1.0;
+			y++;
+			D = D - (2 * dx);
 		}
 		x++;
+		ft_magic(c->octant, x, y, 1, i);
+		ft_putnbr(dx);
+		ft_putendl(" = dx");
+		ft_putnbr(c->octant);
+		ft_putendl(" = c->octant");
+		ft_putnbr(i->x);
+		ft_putendl(" = i->x");
+		ft_putnbr(i->y);
+		ft_putendl(" = i->y");
+		put_pixel_img(e, i->x + c->x1, i->y + c->y1, e->color);
 	}
 	return (0);
 }
 
-int		draw_col(t_env *e, int x, int y)
+void	init_coord_right(t_coord *c, t_env *e,  int x, int y)
 {
-	int i;
+	t_octant	*i;
 
-	i = 1;
-	while (i < e->scale)
-	{
-		put_pixel_img(e, x, i + y, e->color);
-		i++;
-	}
-	return (0);
+	e->color = (e->map[y][x] == e->map[y][x + 1]) ? 0xFF0000 : 0x0000FF;
+	c->x1 = e->scale * (x - e->map[y][x]);
+	c->y1 = e->scale * (y - e->map[y][x]);
+	c->x2 = e->scale * ((x + 1) - e->map[y][x + 1]);
+	c->y2 = e->scale * (y - e->map[y][x + 1]);
+	define_octant(c);
+	ft_magic(c->octant, c->dx, c->dy, 0, i);
+	c->octant == 8 ? draw_col(e, c) : draw_line_x(e, c, i);
 }
 
-void	init_coord(t_coord *c, t_env *e,  int x, int y)
+void	init_coord_down(t_coord *c, t_env *e,  int x, int y)
 {
-	e->color = (e->map[y][x] == 10) ? 0xFFFFFF : 0x00000000;
-	c->x1 = e->scale * (x + e->map[y][x]);
-	c->y1 = e->scale * (y + e->map[y][x]);
-	c->x2 = e->scale * ((x + 1) + e->map[y][x + 1]);
-	c->y2 = e->scale * (y + e->map[y][x + 1]);
+	t_octant	*i;
+
+	e->color = (e->map[y][x] == e->map[y][x + 1]) ? 0xFF0000 : 0x0000FF;
+	c->x1 = e->scale * (x - e->map[y][x]);
+	c->y1 = e->scale * (y - e->map[y][x]);
+	c->x2 = e->scale * (x - e->map[y + 1][x]);
+	c->y2 = e->scale * ((y + 1) - e->map[y + 1][x]);
+	define_octant(c);
+	ft_magic(c->octant, c->dx, c->dy, 0, i);
+	c->octant == 8 ? draw_col(e, c) : draw_line_x(e, c, i);
 }
 
 int		draw(t_env *e)
@@ -111,17 +178,10 @@ int		draw(t_env *e)
 		x = 0;
 		while (x < e->withd)
 		{
-			init_coord(&c, e, x, y);
-			if (x + 1 < e->withd)
-			{
-				e->color = (e->map[y][x] == e->map[y][x + 1]) ? 0xFF0000 : 0x0000FF;
-				draw_line(e, &c);
-			}
-			if (y + 1 < e->hei)
-			{
-				e->color = (e->map[y][x] == e->map[y + 1][x]) ? 0xFF0000 : 0x0000FF;
-//				draw_line(e, &c, c.x1, c.y2);
-			}
+			if (x + 1 < e->withd / 4)
+				init_coord_right(&c, e, x, y);
+//			if (y + 1 < e->hei)
+//				init_coord_down(&c, e, x, y);
 			x++;
 		}
 		y++;
@@ -176,7 +236,7 @@ int		key_hook(int keycode, t_env *e)
 void	init_env(t_env *e, char *file)
 {
 	e->map = read_and_stock(file, e);
-	e->scale = 1;
+	e->scale = 2;
 	e->xpos = 0;
 	e->ypos = 0;
 	e->mlx = mlx_init();
