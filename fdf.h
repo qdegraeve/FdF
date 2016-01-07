@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 12:00:52 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/06 21:53:15 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/07 21:52:00 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,16 @@ typedef struct	s_env
 	int		**map;
 	void	*mlx;
 	void	*window;
-	int		scale;
+	float		scale;
 	int		color;
 	t_img	img;
 }				t_env;
+
+typedef struct	s_octant
+{
+	int		x;
+	int		y;
+}				t_octant;
 
 typedef struct	s_coord
 {
@@ -53,18 +59,21 @@ typedef struct	s_coord
 	int		dx;
 	int		dy;
 	int		octant;
-	double	slope;
+	t_octant i;
 }				t_coord;
-
-typedef struct	s_octant
-{
-	int		x;
-	int		y;
-}				t_octant;
 
 int		count_nbr(char **split, t_env *e);
 int		*str_to_tab(char *line, t_env *e);
 int		count_size_tab(char *av);
 int		**read_and_stock(char *agv, t_env *e);
+int		draw(t_env *e);
+int		draw_line_x(t_env *e, t_coord *c, t_octant *i);
+void	put_pixel_img(t_env *e, int x, int y, int color);
+void	draw_col(t_env *e, t_coord *c);
+void	mlx_fill_image(t_env *e);
+void	define_octant(t_coord *c);
+void	ft_magic(int octant, int x, int y, int out, t_octant *i);
+void	init_coord_right(t_coord *c, t_env *e,  int x, int y);
+void	init_coord_down(t_coord *c, t_env *e,  int x, int y);
 
 #endif
