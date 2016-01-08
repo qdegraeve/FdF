@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:29:18 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/07 20:39:51 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/08 14:02:26 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int		draw(t_env *e)
 
 int		draw_line_x(t_env *e, t_coord *c, t_octant *i)
 {
-	double D;
+	int D;
 	int y;
 	int x;
 	int dx;
@@ -50,21 +50,16 @@ int		draw_line_x(t_env *e, t_coord *c, t_octant *i)
 	y = 0;
 	x = 0;
 	put_pixel_img(e, c->x1, c->y1, e->color);
-	if (D > 0)
-	{
-		y++;
-		D -= 2*dx;
-	}
 	while (++x < dx)
 	{
-		ft_magic(c->octant, x, y, 1, i);
-		put_pixel_img(e, i->x + c->x1, i->y + c->y1, e->color);
 		D = D + (2 * dy);
 		if (D > 0)
 		{
 			y++;
 			D = D - (2 * dx);
 		}
+		ft_magic(c->octant, x, y, 1, i);
+		put_pixel_img(e, i->x + c->x1, i->y + c->y1, e->color);
 	}
 	return (0);
 }
