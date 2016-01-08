@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:29:18 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/08 14:02:26 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/08 17:32:05 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int		draw_line_x(t_env *e, t_coord *c, t_octant *i)
 	D = 2*dy - dx;
 	y = 0;
 	x = 0;
-	put_pixel_img(e, c->x1, c->y1, e->color);
+	put_pixel_img(e, c->x1, c->y1, e->ctype);
 	while (++x < dx)
 	{
 		D = D + (2 * dy);
@@ -59,7 +59,7 @@ int		draw_line_x(t_env *e, t_coord *c, t_octant *i)
 			D = D - (2 * dx);
 		}
 		ft_magic(c->octant, x, y, 1, i);
-		put_pixel_img(e, i->x + c->x1, i->y + c->y1, e->color);
+		put_pixel_img(e, i->x + c->x1, i->y + c->y1, e->ctype);
 	}
 	return (0);
 }
@@ -68,10 +68,16 @@ void	put_pixel_img(t_env *e, int x, int y, int color)
 {
 	int pos;
 
+	if (color == 1)
+		e->color = 0x0000FF + ((e->heightr - y) * 10000);
+	if (color == 2)
+		e->color = 0x0000FF + (e->heightd - x +  ((e->hei - y) * e->angle) * 1000);
+	if (color == 0)
+		e->color = 0x000000;
 	pos = (x * e->img.bpp / 8) + (y * e->img.size_line);
-	e->img.img[pos] = color % 256;
-	e->img.img[pos + 1] = (color >> 8) % 256;
-	e->img.img[pos + 2] = (color >> 16) % 256;
+	e->img.img[pos] = e->color % 256;
+	e->img.img[pos + 1] = (e->color >> 8) % 256;
+	e->img.img[pos + 2] = (e->color >> 16) % 256;
 }
 
 void	draw_col(t_env *e, t_coord *c)
@@ -82,7 +88,7 @@ void	draw_col(t_env *e, t_coord *c)
 	x = c->x1;
 	y = c->y1;
 	while (y++ < c->y2)
-		put_pixel_img(e, x, y, e->color);
+		put_pixel_img(e, x, y, e->ctype);
 }
 
 void	mlx_fill_image(t_env *e)
@@ -95,6 +101,6 @@ void	mlx_fill_image(t_env *e)
 	{
 		x = -1;
 		while (++x < MAX_HEIG)
-			put_pixel_img(e, x, y, 0x000000);
+			put_pixel_img(e, x, y, 0);
 	}
 }

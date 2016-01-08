@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/29 14:56:37 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/08 14:25:42 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/08 17:32:07 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,9 @@ void	init_coord_right(t_coord *c, t_env *e,  int x, int y)
 {
 	t_octant	i;
 
-	e->color = 0xFF0000;
+	e->color = 0x0000FF;
+	e->ctype = 1;
+	e->heightr = e->scale * y;
 	c->x1 =  e->scale * (x) + ((e->hei - y) * e->angle);
 	c->y1 = e->scale * (y) - (e->map[y][x] * e->deep);
 	c->x2 = e->scale * (x + 1) + ((e->hei - y) * e->angle);
@@ -81,6 +83,8 @@ void	init_coord_down(t_coord *c, t_env *e,  int x, int y)
 {
 	t_octant	i;
 
+	e->ctype = 2;
+	e->heightd = e->scale * (y + 1);
 	c->x1 =  e->scale * (x) + ((e->hei - y) * e->angle);
 	c->y1 = e->scale * (y) - (e->map[y][x] * e->deep);
 	c->x2 = e->scale * (x) + ((e->hei - (y + 1)) * e->angle);
@@ -137,7 +141,7 @@ int		key_hook(int keycode, t_env *e)
 	{
 		mlx_clear_window(e->mlx, e->window);
 		mlx_fill_image(e);
-		e->deep += 1;
+		e->deep -= 1;
 		draw(e);
 		mlx_put_image_to_window(e->mlx, e->window, e->img.img_ptr, e->xpos, e->ypos);
 	}
@@ -145,7 +149,7 @@ int		key_hook(int keycode, t_env *e)
 	{
 		mlx_clear_window(e->mlx, e->window);
 		mlx_fill_image(e);
-		e->deep -= 1;
+		e->deep += 1;
 		draw(e);
 		mlx_put_image_to_window(e->mlx, e->window, e->img.img_ptr, e->xpos, e->ypos);
 	}
@@ -164,6 +168,7 @@ t_env	init_env(char *file)
 	e.angle = 20;
 	e.xpos = 0;
 	e.ypos = 0;
+	e.color = 100000;
 	e.mlx = mlx_init();
 	e.window = mlx_new_window(e.mlx, MAX_WITH, MAX_HEIG, "prout");
 	e.img.img_ptr = mlx_new_image(e.mlx, MAX_WITH , MAX_HEIG);

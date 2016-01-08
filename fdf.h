@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 12:00:52 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/08 14:18:47 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/08 17:36:20 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,25 @@ typedef struct	s_img
 	int		endian;
 }				t_img;
 
+typedef struct	s_octant
+{
+	int		x;
+	int		y;
+}				t_octant;
+
+
+typedef struct	s_coord
+{
+	int		x1;
+	int		y1;
+	int		x2;
+	int		y2;
+	int		dx;
+	int		dy;
+	int		octant;
+	t_octant i;
+}				t_coord;
+
 typedef struct	s_env
 {
 	int		withd;
@@ -44,26 +63,12 @@ typedef struct	s_env
 	void	*window;
 	float	scale;
 	int		color;
+	int		ctype;
+	int		heightr;
+	int		heightd;
 	t_img	img;
+	t_coord	c;
 }				t_env;
-
-typedef struct	s_octant
-{
-	int		x;
-	int		y;
-}				t_octant;
-
-typedef struct	s_coord
-{
-	int		x1;
-	int		y1;
-	int		x2;
-	int		y2;
-	int		dx;
-	int		dy;
-	int		octant;
-	t_octant i;
-}				t_coord;
 
 int		count_nbr(char **split, t_env *e);
 int		*str_to_tab(char *line, t_env *e);
