@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 12:00:52 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/08 17:36:20 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/08 19:54:21 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ typedef struct	s_env
 	float	scale;
 	int		color;
 	int		ctype;
-	int		heightr;
-	int		heightd;
+	int		height0;
+	int		height1;
 	t_img	img;
 	t_coord	c;
 }				t_env;

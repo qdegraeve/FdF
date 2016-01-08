@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/29 14:56:37 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/08 17:32:07 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/08 19:54:20 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ void	init_coord_right(t_coord *c, t_env *e,  int x, int y)
 
 	e->color = 0x0000FF;
 	e->ctype = 1;
-	e->heightr = e->scale * y;
+	e->height0 = e->scale * y;
+	e->height1 = e->map[y][x] * e->deep;
 	c->x1 =  e->scale * (x) + ((e->hei - y) * e->angle);
 	c->y1 = e->scale * (y) - (e->map[y][x] * e->deep);
 	c->x2 = e->scale * (x + 1) + ((e->hei - y) * e->angle);
@@ -84,7 +85,6 @@ void	init_coord_down(t_coord *c, t_env *e,  int x, int y)
 	t_octant	i;
 
 	e->ctype = 2;
-	e->heightd = e->scale * (y + 1);
 	c->x1 =  e->scale * (x) + ((e->hei - y) * e->angle);
 	c->y1 = e->scale * (y) - (e->map[y][x] * e->deep);
 	c->x2 = e->scale * (x) + ((e->hei - (y + 1)) * e->angle);

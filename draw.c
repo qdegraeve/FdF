@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:29:18 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/08 17:32:05 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/01/08 19:54:18 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ void	put_pixel_img(t_env *e, int x, int y, int color)
 	int pos;
 
 	if (color == 1)
-		e->color = 0x0000FF + ((e->heightr - y) * 10000);
+		e->color = 0x0000FF + ((e->height1) * 100000);
 	if (color == 2)
-		e->color = 0x0000FF + (e->heightd - x +  ((e->hei - y) * e->angle) * 1000);
+		e->color = 0x0000FF + (e->height1 * 1000);
 	if (color == 0)
 		e->color = 0x000000;
 	pos = (x * e->img.bpp / 8) + (y * e->img.size_line);
