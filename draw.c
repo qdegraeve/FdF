@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/07 19:29:18 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/08 19:54:18 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/02/03 18:26:04 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int		draw(t_env *e)
 {
-	int x;
-	int y;
-	t_coord c;
+	int		x;
+	int		y;
+	t_coord	c;
 
 	x = 0;
 	y = 0;
@@ -38,25 +38,23 @@ int		draw(t_env *e)
 
 int		draw_line_x(t_env *e, t_coord *c, t_octant *i)
 {
-	int D;
-	int y;
-	int x;
-	int dx;
-	int dy;
+	t_calc	d;
+	int		y;
+	int		x;
 
-	dx = i->x;
-	dy = i->y;
-	D = 2*dy - dx;
+	d.x = i->x;
+	d.y = i->y;
+	d.d = 2 * d.y - d.x;
 	y = 0;
 	x = 0;
 	put_pixel_img(e, c->x1, c->y1, e->ctype);
-	while (++x < dx)
+	while (++x < d.x)
 	{
-		D = D + (2 * dy);
-		if (D > 0)
+		d.d = d.d + (2 * d.y);
+		if (d.d > 0)
 		{
 			y++;
-			D = D - (2 * dx);
+			d.d = d.d - (2 * d.x);
 		}
 		ft_magic(c->octant, x, y, 1, i);
 		put_pixel_img(e, i->x + c->x1, i->y + c->y1, e->ctype);
@@ -68,10 +66,6 @@ void	put_pixel_img(t_env *e, int x, int y, int color)
 {
 	int pos;
 
-	if (color == 1)
-		e->color = 0x0000FF + ((e->height1) * 100000);
-	if (color == 2)
-		e->color = 0x0000FF + (e->height1 * 1000);
 	if (color == 0)
 		e->color = 0x000000;
 	pos = (x * e->img.bpp / 8) + (y * e->img.size_line);

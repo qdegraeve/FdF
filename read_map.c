@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 11:58:01 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/01/06 21:53:14 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/02/03 14:59:18 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,15 @@ int		*str_to_tab(char *line, t_env *e)
 		free(tmp[i]);
 		i++;
 	}
+	free(tmp);
 	return (tab);
 }
 
 int		count_size_tab(char *av)
 {
-	int fd;
-	int count;
-	char *line;
+	int		fd;
+	int		count;
+	char	*line;
 
 	count = 0;
 	fd = open(av, O_RDONLY);
@@ -76,29 +77,6 @@ int		**read_and_stock(char *agv, t_env *e)
 	}
 	tab[i] = NULL;
 	e->hei = i;
+	close(fd);
 	return (tab);
 }
-
-/*int		main(int ac, char **av)
-{
-	int		**map;
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	map = read_and_stock(av[1]);
-	ft_putendl("caca");
-	while (map[i] != NULL)
-	{
-		j = 0;
-		while (map[i][j] != -1)
-		{
-			ft_putnbr(map[i][j]);
-			j++;
-		}
-		ft_putchar('\n');
-		i++;
-	}
-	return (0);
-}*/
