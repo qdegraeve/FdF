@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/03 14:59:55 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/02/03 17:43:42 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/02/04 12:40:47 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,9 @@ t_env	init_env(char *file)
 int		main(int argc, char **av)
 {
 	t_env	e;
-	int		**map;
 
+	if (argc != 2)
+		return (0);
 	e = init_env(av[1]);
 	mlx_key_hook(e.window, key_hook, &e);
 	mlx_expose_hook(e.window, expose_hook, &e);
