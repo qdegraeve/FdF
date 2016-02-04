@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/29 14:56:37 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/02/04 16:13:00 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/02/04 19:57:58 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	init_coord(t_coord *c, t_env *e, int x, int y)
 {
 	t_octant	i;
 
-	e->color = 0x0000FF;
+	get_color(e, e->map[y][x]);
 	c->x1 = e->scale * (x) + ((e->hei - y) * e->angle);
 	c->y1 = e->scale * (y) - (e->map[y][x] * e->deep);
 	if (x + 1 < e->withd)
@@ -104,4 +104,17 @@ void	init_coord(t_coord *c, t_env *e, int x, int y)
 		ft_in(c->octant, c->dx, c->dy, &i);
 		c->octant == 8 ? draw_col(e, c) : draw_line_x(e, c, &i);
 	}
+}
+
+void	get_color(t_env *e, int z)
+{
+	e->color = 0x0000FF;
+	if (z == 0)
+		e->color = 0x0000FF;
+	if (z > 0)
+		e->color = 0x00FF00;
+	if (z > 9)
+		e->color = 0x996600;
+	if (z > 40)
+		e->color = 0xFFFFFF;
 }

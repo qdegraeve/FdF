@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/03 14:59:55 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/02/04 16:10:14 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/02/04 19:58:52 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,38 @@ int		expose_hook(t_env *e)
 	return (0);
 }
 
+int		key_hook2(int keycode, t_env *e)
+{
+	if (keycode == 123 && e->xpos > 9)
+		e->xpos -= 10;
+	if (keycode == 124 && e->xpos < 300)
+		e->xpos += 10;
+	if (keycode == 126 && e->ypos > 9)
+		e->ypos -= 10;
+	if (keycode == 125 && e->ypos < 100)
+		e->ypos += 10;
+	if ((keycode == 84 || keycode == 19) && e->deep > 0)
+		e->deep -= 1;
+	if (keycode == 91 || keycode == 28)
+		e->deep += 1;
+	return (0);
+}
+
 int		key_hook(int keycode, t_env *e)
 {
 	ft_putnbr(keycode);
 	ft_putendl(" = keycode");
 	mlx_clear_window(e->mlx, e->window);
 	mlx_fill_image(e);
-	if (keycode == 69)
-		e->scale = e->scale <= 20 ? e->scale * 1.5 : e->scale;
-	if (keycode == 78)
+	if (keycode == 69 || keycode == 24)
+		e->scale = e->scale <= 50 ? e->scale * 1.5 : e->scale;
+	if (keycode == 78 || keycode == 27)
 		e->scale = e->scale >= 1.5 ? e->scale / 1.5 : e->scale;
-	if (keycode == 124)
+	if (keycode == 88 || keycode == 22)
 		e->angle += 1;
-	if (keycode == 123)
+	if (keycode == 86 || keycode == 21)
 		e->angle -= 1;
-	if (keycode == 126 && e->ypos > 9)
-		e->ypos -= 10;
-	if (keycode == 125 && e->ypos < 100)
-		e->ypos += 10;
-	if (keycode == 27)
-		e->deep -= 1;
-	if (keycode == 24)
-		e->deep += 1;
+	key_hook2(keycode, e);
 	draw(e);
 	mlx_put_image_to_window(e->mlx, e->window, e->img.img_ptr, e->xpos,
 			e->ypos);
@@ -56,10 +66,10 @@ t_env	init_env(char *file)
 
 	e.map = read_and_stock(file, &e);
 	e.scale = 2.0;
-	e.deep = 2;
+	e.deep = 1;
 	e.angle = 2;
-	e.xpos = 0;
-	e.ypos = 0;
+	e.xpos = 100;
+	e.ypos = 100;
 	e.color = 100000;
 	e.mlx = mlx_init();
 	e.window = mlx_new_window(e.mlx, MAX_WITH, MAX_HEIG, file);

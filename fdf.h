@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 12:00:52 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/02/04 15:53:14 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/02/04 19:51:50 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,6 @@ void			define_octant(t_coord *c);
 void			ft_in(int octant, int x, int y, t_octant *i);
 void			ft_out(int octant, int x, int y, t_octant *i);
 void			init_coord(t_coord *c, t_env *e, int x, int y);
+void			get_color(t_env *e, int z);
 
 #endif
