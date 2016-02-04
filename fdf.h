@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 12:00:52 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/02/03 18:25:42 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/02/04 15:53:14 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ typedef struct	s_calc
 	int			x;
 	int			y;
 	int			d;
-	int			out;
 }				t_calc;
 
 typedef struct	s_env
@@ -71,7 +70,6 @@ typedef struct	s_env
 	void		*window;
 	float		scale;
 	int			color;
-	int			ctype;
 	t_img		img;
 	t_coord		c;
 }				t_env;
@@ -82,12 +80,12 @@ int				count_size_tab(char *av);
 int				**read_and_stock(char *agv, t_env *e);
 int				draw(t_env *e);
 int				draw_line_x(t_env *e, t_coord *c, t_octant *i);
-void			put_pixel_img(t_env *e, int x, int y, int color);
+void			put_pixel_img(t_env *e, int x, int y);
 void			draw_col(t_env *e, t_coord *c);
 void			mlx_fill_image(t_env *e);
 void			define_octant(t_coord *c);
-void			ft_magic(int octant, int x, int y, int out, t_octant *i);
-void			init_coord_right(t_coord *c, t_env *e, int x, int y);
-void			init_coord_down(t_coord *c, t_env *e, int x, int y);
+void			ft_in(int octant, int x, int y, t_octant *i);
+void			ft_out(int octant, int x, int y, t_octant *i);
+void			init_coord(t_coord *c, t_env *e, int x, int y);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/03 14:59:55 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/02/04 12:40:47 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/02/04 16:10:14 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,21 @@ int		key_hook(int keycode, t_env *e)
 	ft_putendl(" = keycode");
 	mlx_clear_window(e->mlx, e->window);
 	mlx_fill_image(e);
-	if (keycode == 69 || keycode == 24)
+	if (keycode == 69)
 		e->scale = e->scale <= 20 ? e->scale * 1.5 : e->scale;
-	if (keycode == 78 || keycode == 27)
+	if (keycode == 78)
 		e->scale = e->scale >= 1.5 ? e->scale / 1.5 : e->scale;
-	if (keycode == 123)
-		e->angle += 1;
 	if (keycode == 124)
+		e->angle += 1;
+	if (keycode == 123)
 		e->angle -= 1;
-	if (keycode == 125)
+	if (keycode == 126 && e->ypos > 9)
+		e->ypos -= 10;
+	if (keycode == 125 && e->ypos < 100)
+		e->ypos += 10;
+	if (keycode == 27)
 		e->deep -= 1;
-	if (keycode == 126)
+	if (keycode == 24)
 		e->deep += 1;
 	draw(e);
 	mlx_put_image_to_window(e->mlx, e->window, e->img.img_ptr, e->xpos,
@@ -58,7 +62,7 @@ t_env	init_env(char *file)
 	e.ypos = 0;
 	e.color = 100000;
 	e.mlx = mlx_init();
-	e.window = mlx_new_window(e.mlx, MAX_WITH, MAX_HEIG, "prout");
+	e.window = mlx_new_window(e.mlx, MAX_WITH, MAX_HEIG, file);
 	e.img.img_ptr = mlx_new_image(e.mlx, MAX_WITH, MAX_HEIG);
 	e.img.img = mlx_get_data_addr(e.img.img_ptr, &e.img.bpp, &e.img.size_line,
 			&e.img.endian);

@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/29 14:56:37 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/02/03 18:25:45 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/02/04 16:13:00 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,26 @@ void	define_octant(t_coord *c)
 		c->octant = 7;
 }
 
-void	ft_magic(int octant, int x, int y, int out, t_octant *i)
+void	ft_in(int octant, int x, int y, t_octant *i)
 {
+	i->x = x;
+	i->y = y;
+	if (octant == 3 || octant == 4)
+		i->x = -x;
+	if (octant == 7 || octant == 4)
+		i->y = -y;
+	if (octant == 1 || octant == 2 || octant == 5 || octant == 6)
+	{
+		i->x = (octant < 3) ? y : -y;
+		i->y = (octant > 1 && octant < 6) ? -x : x;
+	}
+}
+
+void	ft_out(int octant, int x, int y, t_octant *i)
+{
+	int		out;
+
+	out = 1;
 	i->x = x;
 	i->y = y;
 	if (out == 1 && octant == 6)
@@ -63,31 +81,27 @@ void	ft_magic(int octant, int x, int y, int out, t_octant *i)
 	}
 }
 
-void	init_coord_right(t_coord *c, t_env *e, int x, int y)
+void	init_coord(t_coord *c, t_env *e, int x, int y)
 {
 	t_octant	i;
 
 	e->color = 0x0000FF;
-	e->ctype = 1;
 	c->x1 = e->scale * (x) + ((e->hei - y) * e->angle);
 	c->y1 = e->scale * (y) - (e->map[y][x] * e->deep);
-	c->x2 = e->scale * (x + 1) + ((e->hei - y) * e->angle);
-	c->y2 = e->scale * (y) - (e->map[y][x + 1] * e->deep);
-	define_octant(c);
-	ft_magic(c->octant, c->dx, c->dy, 0, &i);
-	c->octant == 8 ? draw_col(e, c) : draw_line_x(e, c, &i);
-}
-
-void	init_coord_down(t_coord *c, t_env *e, int x, int y)
-{
-	t_octant	i;
-
-	e->ctype = 2;
-	c->x1 = e->scale * (x) + ((e->hei - y) * e->angle);
-	c->y1 = e->scale * (y) - (e->map[y][x] * e->deep);
-	c->x2 = e->scale * (x) + ((e->hei - (y + 1)) * e->angle);
-	c->y2 = e->scale * ((y + 1)) - (e->map[y + 1][x] * e->deep);
-	define_octant(c);
-	ft_magic(c->octant, c->dx, c->dy, 0, &i);
-	c->octant == 8 ? draw_col(e, c) : draw_line_x(e, c, &i);
+	if (x + 1 < e->withd)
+	{
+		c->x2 = e->scale * (x + 1) + ((e->hei - y) * e->angle);
+		c->y2 = e->scale * (y) - (e->map[y][x + 1] * e->deep);
+		define_octant(c);
+		ft_in(c->octant, c->dx, c->dy, &i);
+		c->octant == 8 ? draw_col(e, c) : draw_line_x(e, c, &i);
+	}
+	if (y + 1 < e->hei)
+	{
+		c->x2 = e->scale * (x) + ((e->hei - (y + 1)) * e->angle);
+		c->y2 = e->scale * ((y + 1)) - (e->map[y + 1][x] * e->deep);
+		define_octant(c);
+		ft_in(c->octant, c->dx, c->dy, &i);
+		c->octant == 8 ? draw_col(e, c) : draw_line_x(e, c, &i);
+	}
 }
