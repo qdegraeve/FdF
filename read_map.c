@@ -6,7 +6,7 @@
 /*   By: qdegraev <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/30 11:58:01 by qdegraev          #+#    #+#             */
-/*   Updated: 2016/02/04 20:03:28 by qdegraev         ###   ########.fr       */
+/*   Updated: 2016/02/05 12:32:08 by qdegraev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,11 @@ int		*str_to_tab(char *line, t_env *e)
 
 	i = 0;
 	tmp = ft_strsplit(line, ' ');
-	tab = (int*)malloc(count_nbr(tmp, e) * sizeof(tab));
+	if (!(tab = (int*)malloc(count_nbr(tmp, e) * sizeof(tab))))
+	{
+		free(tmp);
+		exit(0);
+	}
 	while (tmp[i])
 	{
 		tab[i] = ft_getnbr(tmp[i]);
@@ -50,7 +54,8 @@ int		count_size_tab(char *av)
 	char	*line;
 
 	count = 0;
-	fd = open(av, O_RDONLY);
+	if ((fd = open(av, O_RDONLY)) < 0)
+		exit(0);
 	while (get_next_line(fd, &line))
 	{
 		count++;
@@ -68,8 +73,10 @@ int		**read_and_stock(char *agv, t_env *e)
 	char	*line;
 
 	i = 0;
-	tab = (int**)malloc(sizeof(*tab) * (count_size_tab(agv) + 1));
-	fd = open(agv, O_RDONLY);
+	if ((fd = open(agv, O_RDONLY)) < 0)
+		exit(0);
+	if (!(tab = (int**)malloc(sizeof(*tab) * (count_size_tab(agv) + 1))))
+		return (0);
 	while (get_next_line(fd, &line))
 	{
 		tab[i++] = str_to_tab(line, e);
